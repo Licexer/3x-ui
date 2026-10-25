@@ -2072,7 +2072,7 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 			}
 		}
 
-						if inbound.TrafficMultiplier != 0 {
+				if inbound.TrafficMultiplier != 0 {
 					oldInbound.TrafficMultiplier = inbound.TrafficMultiplier
 				}
 				oldInbound.Total = inbound.Total
