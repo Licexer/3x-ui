@@ -19,22 +19,16 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Test database package
-        run: go test ./internal/database -count=1
-
-      - name: Test service package
-        run: go test ./internal/web/service -count=1
-
-      - name: Test runtime package
-        run: go test ./internal/web/runtime -count=1
-
-      - name: Test Xray package
-        run: go test ./internal/xray -count=1
-
-      - name: Build isolated Linux x86_64 test binary
+      - name: Prepare embedded frontend stub
         run: |
           mkdir -p internal/web/dist
           touch internal/web/dist/.gitkeep
+
+      - name: Test all Go packages
+        run: go test -count=1 ./...
+
+      - name: Build isolated Linux x86_64 test binary
+        run: |
           CGO_ENABLED=1 GOOS=linux GOARCH=amd64 go build -trimpath -o x-ui-multiplier-test .
 
       - name: Upload test binary
