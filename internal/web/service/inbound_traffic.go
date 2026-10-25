@@ -133,6 +133,11 @@ func (s *InboundService) addClientTraffic(tx *gorm.DB, traffics []*xray.ClientTr
 	if len(traffics) == 0 {
 		return nil
 	}
+	traffics, err = ResolveWeightedClientTraffic(tx, traffics)
+	if err != nil {
+		return fmt.Errorf("apply inbound traffic multiplier: %w", err)
+	}
+
 	traffics, err = canonicalizeClientTraffic(tx, traffics)
 	if err != nil {
 		return fmt.Errorf("resolve client traffic identities: %w", err)
