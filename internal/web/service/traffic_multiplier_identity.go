@@ -39,5 +39,13 @@ func ParseTrafficStatsIdentity(identity string) (int, string, bool) {
         return 0, "", false
     }
 
-    return inboundID, string(raw), true
+    email := string(raw)
+    if TrafficStatsIdentity(inboundID, email) != identity {
+        return 0, "", false
+    }
+    if validateClientEmail(email) != nil {
+        return 0, "", false
+    }
+
+    return inboundID, email, true
 }

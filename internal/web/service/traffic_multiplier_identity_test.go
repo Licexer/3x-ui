@@ -28,3 +28,23 @@ func TestTrafficStatsIdentityRoundTrip(t *testing.T) {
         t.Fatal("legacy email must not parse as stats identity")
     }
 }
+
+func TestTrafficStatsIdentityInvalidInputs(t *testing.T) {
+    invalid := []string{
+        "",
+        "alice",
+        "xuitm1_0_YWxpY2U",
+        "xuitm1_-1_YWxpY2U",
+        "xuitm1_12_",
+        "xuitm1_12_!",
+        "xuitm1_012_YWxpY2U",
+        "xuitm1_12_YS9i",
+        "xuitm1_12_YWxpY2U=",
+    }
+
+    for _, identity := range invalid {
+        if _, _, ok := ParseTrafficStatsIdentity(identity); ok {
+            t.Errorf("invalid identity %q was accepted", identity)
+        }
+    }
+}
