@@ -2072,10 +2072,10 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 			}
 		}
 
-				if inbound.TrafficMultiplier != 0 {
-					oldInbound.TrafficMultiplier = inbound.TrafficMultiplier
-				}
-				oldInbound.Total = inbound.Total
+		if inbound.TrafficMultiplier != 0 {
+			oldInbound.TrafficMultiplier = inbound.TrafficMultiplier
+		}
+		oldInbound.Total = inbound.Total
 		oldInbound.Remark = inbound.Remark
 		oldInbound.SubSortIndex = inbound.SubSortIndex
 		oldInbound.ExcludeFromSub = inbound.ExcludeFromSub
