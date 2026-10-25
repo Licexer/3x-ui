@@ -25,10 +25,12 @@ func TestResolveWeightedClientTraffic(t *testing.T) {
 
     inbound1 := model.Inbound{
         Port: 2085,
+        Tag: "test-vless-2085",
         TrafficMultiplier: 2,
     }
     inbound2 := model.Inbound{
         Port: 443,
+        Tag: "test-vless-443",
         TrafficMultiplier: 1,
     }
 
