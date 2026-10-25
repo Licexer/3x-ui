@@ -47,6 +47,7 @@ type User struct {
 
 // Inbound represents an Xray inbound configuration with traffic statistics and settings.
 type Inbound struct {
+    TrafficMultiplier float64 `json:"trafficMultiplier" form:"trafficMultiplier" gorm:"column:traffic_multiplier;default:1;not null"`
 	Id                   int                  `json:"id" form:"id" gorm:"primaryKey;autoIncrement" example:"1"`                                                                                                     // Unique identifier
 	UserId               int                  `json:"-"`                                                                                                                                                            // Associated user ID
 	Up                   int64                `json:"up" form:"up"`                                                                                                                                                 // Upload traffic in bytes
