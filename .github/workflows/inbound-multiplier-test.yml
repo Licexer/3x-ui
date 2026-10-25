@@ -1,0 +1,29 @@
+name: Inbound Multiplier Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - inbound-multiplier
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Go
+        uses: actions/setup-go@v6
+        with:
+          go-version-file: go.mod
+          cache: true
+
+      - name: Test database migration
+        run: go test ./internal/database -run Test -count=1
+
+      - name: Test traffic multiplier
+        run: |
+          go test ./internal/web/service \
+            -run 'Test(WeightedTraffic|TrafficStatsIdentity|ResolveWeightedClientTraffic)' \
+            -count=1
