@@ -254,6 +254,9 @@ func (s *XrayService) GetXrayConfig() (*xray.Config, error) {
 				flow = ""
 			}
 			entry := map[string]any{"email": c.Email}
+			if xray.UsePerInboundStatsEmail(string(inbound.Protocol), inbound.TrafficMultiplier) {
+				entry["email"] = xray.TrafficStatsIdentity(inbound.Id, c.Email)
+			}
 			switch inbound.Protocol {
 			case model.VLESS:
 				if c.ID != "" {

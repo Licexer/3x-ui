@@ -2,9 +2,10 @@ package service
 
 import (
     "encoding/base64"
-    "fmt"
-    "strconv"
+        "strconv"
     "strings"
+
+    "github.com/mhsanaei/3x-ui/v3/internal/xray"
 )
 
 const trafficIdentityPrefix = "xuitm1_"
@@ -12,8 +13,7 @@ const trafficIdentityPrefix = "xuitm1_"
 // TrafficStatsIdentity returns a unique stats identity per
 // (inbound ID, original email) pair.
 func TrafficStatsIdentity(inboundID int, email string) string {
-    encoded := base64.RawURLEncoding.EncodeToString([]byte(email))
-    return fmt.Sprintf("%s%d_%s", trafficIdentityPrefix, inboundID, encoded)
+    return xray.TrafficStatsIdentity(inboundID, email)
 }
 
 // ParseTrafficStatsIdentity decodes a generated stats identity.

@@ -276,6 +276,20 @@ func (l *Local) AddUser(_ context.Context, ib *model.Inbound, userMap map[string
 	if ib.Protocol == model.MTProto || ib.Protocol == model.AmneziaWG || ib.Protocol == model.TUIC {
 		return nil
 	}
+    if xray.UsePerInboundStatsEmail(string(ib.Protocol), ib.TrafficMultiplier) {
+        email, ok := userMap["email"].(string)
+        if !ok || email == "" {
+            return errors.New("missing Xray user email")
+        }
+
+        mapped := make(map[string]any, len(userMap))
+        for key, value := range userMap {
+            mapped[key] = value
+        }
+        mapped["email"] = xray.TrafficStatsIdentity(ib.Id, email)
+        userMap = mapped
+    }
+
 	return l.withAPI(func(api *xray.XrayAPI) error {
 		return api.AddUser(string(ib.Protocol), ib.Tag, userMap)
 	})
@@ -285,6 +299,10 @@ func (l *Local) RemoveUser(_ context.Context, ib *model.Inbound, email string) e
 	if ib.Protocol == model.MTProto || ib.Protocol == model.AmneziaWG || ib.Protocol == model.TUIC {
 		return nil
 	}
+    if xray.UsePerInboundStatsEmail(string(ib.Protocol), ib.TrafficMultiplier) {
+        email = xray.TrafficStatsIdentity(ib.Id, email)
+    }
+
 	return l.withAPI(func(api *xray.XrayAPI) error {
 		return api.RemoveUser(ib.Tag, email)
 	})
