@@ -19,14 +19,17 @@ jobs:
           go-version-file: go.mod
           cache: true
 
-      - name: Test database migration
-        run: go test ./internal/database -run Test -count=1
+      - name: Test database package
+        run: go test ./internal/database -count=1
 
-      - name: Test traffic multiplier
-        run: |
-          go test ./internal/web/service \
-            -run 'Test(WeightedTraffic|TrafficStatsIdentity|ResolveWeightedClientTraffic)' \
-            -count=1
+      - name: Test service package
+        run: go test ./internal/web/service -count=1
+
+      - name: Test runtime package
+        run: go test ./internal/web/runtime -count=1
+
+      - name: Test Xray package
+        run: go test ./internal/xray -count=1
 
       - name: Build isolated Linux x86_64 test binary
         run: |
