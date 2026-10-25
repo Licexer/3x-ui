@@ -1229,6 +1229,9 @@ func (s *InboundService) normalizeMtprotoXrayPort(inbound *model.Inbound, oldSet
 // then saves the inbound to the database and optionally adds it to the running Xray instance.
 // Returns the created inbound, whether Xray needs restart, and any error.
 func (s *InboundService) AddInbound(inbound *model.Inbound) (*model.Inbound, bool, error) {
+	if inbound.TrafficMultiplier == 0 {
+		inbound.TrafficMultiplier = 1
+	}
 	inbound.Id = 0
 	if err := normalizeTuicSettings(inbound); err != nil {
 		return inbound, false, err
@@ -2069,7 +2072,10 @@ func (s *InboundService) UpdateInbound(inbound *model.Inbound) (*model.Inbound, 
 			}
 		}
 
-		oldInbound.Total = inbound.Total
+		if inbound.TrafficMultiplier != 0 {
+    oldInbound.TrafficMultiplier = inbound.TrafficMultiplier
+}
+oldInbound.Total = inbound.Total
 		oldInbound.Remark = inbound.Remark
 		oldInbound.SubSortIndex = inbound.SubSortIndex
 		oldInbound.ExcludeFromSub = inbound.ExcludeFromSub
