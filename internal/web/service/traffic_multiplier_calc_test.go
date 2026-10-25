@@ -30,3 +30,22 @@ func TestWeightedTraffic(t *testing.T) {
         })
     }
 }
+
+func TestWeightedTrafficOverflow(t *testing.T) {
+    cases := []struct {
+        bytes      int64
+        multiplier float64
+    }{
+        {9223372036854775807, 1},
+        {9223372036854775807, 2},
+        {4611686018427387904, 2},
+    }
+
+    for _, tc := range cases {
+        _, err := WeightedTraffic(tc.bytes, tc.multiplier)
+        if err == nil {
+            t.Errorf("expected overflow error: bytes=%d multiplier=%v",
+                tc.bytes, tc.multiplier)
+        }
+    }
+}

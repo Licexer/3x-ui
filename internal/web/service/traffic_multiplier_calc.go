@@ -21,9 +21,14 @@ func WeightedTraffic(bytes int64, multiplier float64) (int64, error) {
     }
 
     result := float64(bytes) * multiplier
-    if math.IsInf(result, 0) || result > float64(math.MaxInt64) {
+    if math.IsNaN(result) || math.IsInf(result, 0) || result >= math.Exp2(63) {
         return 0, ErrInvalidTrafficMultiplier
     }
 
-    return int64(math.Round(result)), nil
+    rounded := math.Round(result)
+    if rounded >= math.Exp2(63) {
+        return 0, ErrInvalidTrafficMultiplier
+    }
+
+    return int64(rounded), nil
 }
