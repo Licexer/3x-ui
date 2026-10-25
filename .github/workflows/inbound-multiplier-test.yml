@@ -7,7 +7,7 @@ on:
       - inbound-multiplier
 
 jobs:
-  test:
+  test-and-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -27,3 +27,17 @@ jobs:
           go test ./internal/web/service \
             -run 'Test(WeightedTraffic|TrafficStatsIdentity|ResolveWeightedClientTraffic)' \
             -count=1
+
+      - name: Build isolated Linux x86_64 test binary
+        run: |
+          mkdir -p internal/web/dist
+          touch internal/web/dist/.gitkeep
+          CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -trimpath -o x-ui-multiplier-test .
+
+      - name: Upload test binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: x-ui-multiplier-linux-amd64
+          path: x-ui-multiplier-test
+          if-no-files-found: error
+          retention-days: 7
